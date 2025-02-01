@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-jbsm*nsze+ya_v(8k#p&30^*spy+tjr^n_#3qa&p*gu(9pl8t#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['knowledgebase-django-api.onrender.com', '127.0.0.1']
 
 
 # Application definition
@@ -104,7 +104,7 @@ DATABASES = {
     }
 }
 
-ALLOWED_HOSTS = ['knowledgebase-django-api.onrender.com', '127.0.0.1']
+
 
 
 # Password validation
