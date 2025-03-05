@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import UserRegisterView, UserLoginView, UserLogoutView, NotebookViewSet, CategoryViewSet, ArticleViewSet, CommentViewSet
+from .views import UserRegisterView, UserLoginView, UserLogoutView, NotebookViewSet, CategoryViewSet, ArticleViewSet, CommentViewSet, VerifyAuthTokenView
 
 router = DefaultRouter()
 router.register(r'notebooks', NotebookViewSet, basename='notebook')
@@ -12,5 +12,6 @@ urlpatterns = [
     path('register/', UserRegisterView.as_view(), name='register'),
     path('login/', UserLoginView.as_view(), name='login'),
     path('logout/', UserLogoutView.as_view(), name='logout'),
+    path('auth/verify/', VerifyAuthTokenView.as_view(), name='api_token_verify'),
     path('', include(router.urls)),
 ]

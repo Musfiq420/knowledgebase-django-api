@@ -42,6 +42,14 @@ class UserLogoutView(APIView):
     def post(self, request):
         request.user.auth_token.delete()
         return Response({"message": "Logged out successfully!"}, status=status.HTTP_200_OK)
+    
+    
+class VerifyAuthTokenView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({"detail": "Token is valid"})
 
 class NotebookViewSet(viewsets.ModelViewSet):
     serializer_class = NotebookSerializer
