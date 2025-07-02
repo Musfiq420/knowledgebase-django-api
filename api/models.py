@@ -2,6 +2,20 @@ from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.auth.models import User
 
+def profile_path(instance, filename): 
+    return 'user_{0}/{1}'.format(instance.user.id, filename)
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField( 
+        default='profile/default.jpg', 
+        upload_to = profile_path
+    )
+    bio = models.TextField()
+
+    def __str__(self):
+        return self.user.username
+
 class Notebook(models.Model):
     name = models.CharField(max_length=255)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_notebooks')

@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,9 +27,11 @@ SECRET_KEY = 'django-insecure-jbsm*nsze+ya_v(8k#p&30^*spy+tjr^n_#3qa&p*gu(9pl8t#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['knowledgebase-django-api.onrender.com', '127.0.0.1', 'localhost:5173', 'knowledgebase-xi.vercel.app']
+ALLOWED_HOSTS = ["http://localhost:3000",'knowledgebase-django-api.onrender.com', '127.0.0.1', 'localhost:5173', 'knowledgebase-xi.vercel.app']
 
-
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000"
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,7 +46,15 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'mptt',
     'api',
+    'dj_rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'dj_rest_auth.registration',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
+SITE_ID = 1 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -53,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    "allauth.account.middleware.AccountMiddleware"
 ]
 
 ROOT_URLCONF = 'knowledgebase.urls'
@@ -79,7 +92,7 @@ WSGI_APPLICATION = 'knowledgebase.wsgi.application'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',  # Token-based auth
-        'rest_framework.authentication.SessionAuthentication',  # Session-based auth
+        # 'rest_framework.authentication.SessionAuthentication',  # Session-based auth
     ],
 }
 
@@ -152,3 +165,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'

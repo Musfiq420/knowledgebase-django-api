@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import UserRegisterView, UserLoginView, UserLogoutView, NotebookViewSet, CategoryViewSet, ArticleViewSet, CommentViewSet, VerifyAuthTokenView
+from .views import NotebookViewSet, CategoryViewSet, ArticleViewSet, CommentViewSet
+from .views import GoogleLogin,UserMe
 
 router = DefaultRouter()
 router.register(r'notebooks', NotebookViewSet, basename='notebook')
@@ -9,9 +10,7 @@ router.register(r'articles', ArticleViewSet, basename='article')
 router.register(r'comments', CommentViewSet, basename='comment')
 
 urlpatterns = [
-    path('register/', UserRegisterView.as_view(), name='register'),
-    path('login/', UserLoginView.as_view(), name='login'),
-    path('logout/', UserLogoutView.as_view(), name='logout'),
-    path('auth/verify/', VerifyAuthTokenView.as_view(), name='api_token_verify'),
+    path('google/login/', GoogleLogin.as_view(), name='google_login'),
+    path('users/me/', UserMe.as_view(), name='user_detail'),
     path('', include(router.urls)),
 ]

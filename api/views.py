@@ -1,55 +1,30 @@
+import os
 from django.contrib.auth import authenticate
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialLoginView
 from rest_framework import viewsets,generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import permissions
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from .models import Notebook, Category, Article, Comment
-from .serializers import NotebookSerializer, CategorySerializer, ArticleSerializer, CommentSerializer, UserRegisterSerializer, UserLoginSerializer
+from .serializers import NotebookSerializer, CategorySerializer, ArticleSerializer, CommentSerializer, UserSerializer
 
-class UserRegisterView(generics.CreateAPIView):
-    permission_classes = [AllowAny]
-    
-    serializer_class = UserRegisterSerializer
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    callback_url = os.getenv("GOOGLE_REDIRECT_URL")
+    client_class = OAuth2Client
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class UserMe(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
     
-class UserLoginView(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [AllowAny]
-
-    def post(self, request):
-        serializer = UserLoginSerializer(data=request.data)
-        if serializer.is_valid():
-            username = serializer.validated_data['username']
-            password = serializer.validated_data['password']
-            user = authenticate(username=username, password=password)
-            if user:
-                token, created = Token.objects.get_or_create(user=user)
-                return Response({"token": token.key, "message": "Login successful!"}, status=status.HTTP_200_OK)
-            return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-class UserLogoutView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        request.user.auth_token.delete()
-        return Response({"message": "Logged out successfully!"}, status=status.HTTP_200_OK)
-    
-    
-class VerifyAuthTokenView(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-
     def get(self, request):
-        return Response({"detail": "Token is valid"})
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+    
 
 class NotebookViewSet(viewsets.ModelViewSet):
     serializer_class = NotebookSerializer

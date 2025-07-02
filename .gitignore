@@ -10,10 +10,11 @@ env/
 # Local environment variables
 .env
 *.env
+.venv
+*.venv
 
 # Django stuff
 
-media/
 staticfiles/
 logs/
 *.log
